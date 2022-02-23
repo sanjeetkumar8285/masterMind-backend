@@ -4,7 +4,7 @@ const bcrypt=require('bcrypt')
 const userModel=require("../model/Schema/userSchema")
 const checkExistUser=require("../middleware/checkExistUser")
 const auth=require('../middleware/auth');
-
+const contactController=require("../controller/contactController")
 router.post("/register",checkExistUser,async(req,res)=>{
     try{
         const {name,email,password,phone,userType,city,interestedIn,dealsIn,companyName}=req.body
@@ -62,4 +62,6 @@ res.status(200).json({message:'logged in user Data',success:true,data})
     res.status(400).json({message:"Something went wrong",success:false,err:err.message})
 }
 })
+
+router.post("/sendMail",contactController.contact)
 module.exports=router;

@@ -1,0 +1,109 @@
+const mongoose=require('../conn');
+const Schema=mongoose.Schema;
+const propertySchema=new Schema({
+userId:{
+type:mongoose.Schema.Types.ObjectId,
+ref:'admin'
+},
+name:{
+type:String,
+required:true
+},
+propertyNo:{
+    type:String,
+    required:true
+},
+propertyStatus:{
+    type:String,
+    required:true
+},
+propertyType:{
+    type:String,
+    required:true
+},
+price:{
+    type:String,
+    required:true
+},
+about:{
+    type:String,
+    required:true
+},
+rating:{
+    sportsAndOutdoor:{
+        type:Number,
+        required:true
+    },
+    clubHouse:{
+        type:Number,
+        required:true
+    },
+    specifications:{
+        type:Number,
+        required:true
+    },
+    greenArea:{
+        type:Number,
+        required:true
+    },
+    fittingAndFurshing:{
+        type:Number,
+        required:true
+    },
+},
+amenities:{
+    type:Array
+},
+description:{
+    areaSize:{
+        type:String
+    },
+    areaSizePrefix:{
+        type:String
+    },
+    landArea:{
+        type:String
+    },
+    landAreaPrefix:{
+        type:String
+    },
+    bedroom:{
+        type:Number
+    },
+},
+address:{
+    state:{
+        type:String,
+        required:true
+    },
+    addressDetails:{
+        type:String,
+        required:true
+    },
+    latitude:{
+        type:String,
+        required:true
+    },
+    longitude:{
+        type:String,
+        required:true
+    }
+},
+
+brochureImage:{
+    type:String
+},
+mapImage:{
+    type:String
+},
+images:{
+    type:Array
+},
+status:{
+    type:Boolean,
+    default:true
+}
+},{timestamps:true})
+
+const propertyModel=mongoose.model('property',propertySchema)
+module.exports=propertyModel
