@@ -14,8 +14,21 @@ res.status(201).json({message:"property status created successfully",success:tru
     res.status(400).json({message:"something went wrong",success:false,err:err.message})
 }
 }
-
 module.exports.getPropertyStatus=async(req,res)=>{
+    try{
+    const {page}=req.query
+    const limit=20;
+    const startIndex=(Number(page)-1)*limit
+    const total=await propertyStatusModel.countDocuments();
+    const propertyStatus=await propertyStatusModel.find().sort({_id:-1}).limit(limit).skip(startIndex)
+    res.status(200).json({data:propertyStatus,currentPage:Number(page),numberofPage:Math.ceil(total/limit)})
+    }catch(err){
+    console.log(err)
+    res.status(400).json({message:"something went wrong",success:false,err:err.message})
+    }
+    }
+
+module.exports.searchPropertyStatus=async(req,res)=>{
     try{
 const keyword=req.query.keyword ?
         {

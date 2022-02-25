@@ -1,6 +1,7 @@
 const blogModel=require("../model/Schema/blogSchema");
 const path=require("path")
 const fs=require('fs');
+
 module.exports.addBlog=async(req,res)=>{
 const {blogName,blogDescription,status}=req.body
 try{
@@ -18,7 +19,22 @@ res.status(201).json({message:"Blog Created Successfully",data,success:true})
 res.status(400).json({message:"Something went wrong",err:err.message,success:false})
 }
 }
+
 module.exports.getBlog=async(req,res)=>{
+    try{
+    const {page}=req.query
+    const limit=20;
+    const startIndex=(Number(page)-1)*limit
+    const total=await blogModel.countDocuments();
+    const blog=await blogModel.find().sort({_id:-1}).limit(limit).skip(startIndex)
+    res.status(200).json({data:blog,currentPage:Number(page),numberofPage:Math.ceil(total/limit)})
+    }catch(err){
+    console.log(err)
+    res.status(400).json({message:"something went wrong",success:false,err:err.message})
+    }
+    }
+
+module.exports.searchBlog=async(req,res)=>{
 try{
 const keyword=req.query.keyword ? 
 {

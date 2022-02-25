@@ -16,6 +16,20 @@ res.status(201).json({message:"Property Type Created Successfully",success:true,
 }
 
 module.exports.getPropertyType=async(req,res)=>{
+try{
+const {page}=req.query
+const limit=20;
+const startIndex=(Number(page)-1)*limit
+const total=await propertyTypeModel.countDocuments();
+const propertyType=await propertyTypeModel.find().sort({_id:-1}).limit(limit).skip(startIndex)
+res.status(200).json({data:propertyType,currentPage:Number(page),numberofPage:Math.ceil(total/limit)})
+}catch(err){
+console.log(err)
+res.status(400).json({message:"something went wrong",success:false,err:err.message})
+}
+}
+
+module.exports.searchPropertyType=async(req,res)=>{
     try{
 const keyword=req.query.keyword ?
         {
@@ -26,10 +40,14 @@ const keyword=req.query.keyword ?
         }:{}
         const data=await propertyTypeModel.find({...keyword}).sort({'createdAt':-1})
         res.status(200).json({message:"Property type retreived",success:true,data})
-    }catch(err){
+    }
+catch(err){
+        console.log(err)
         res.status(400).json({message:"something went wrong",success:false,err:err.message})
     }
 }
+
+
 module.exports.updatePropertyType=async(req,res)=>{
     try{
         const id=req.params.id;

@@ -65,8 +65,21 @@ res.status(201).json({message:"property added successfully",success:true,data})
         res.status(400).json({message:"Something went wrong",success:false,err:err.message})
     }
 }
-
 module.exports.getProperty=async(req,res)=>{
+    try{
+    const {page}=req.query
+    const limit=20;
+    const startIndex=(Number(page)-1)*limit
+    const total=await propertyModel.countDocuments();
+    const property=await propertyModel.find().sort({_id:-1}).limit(limit).skip(startIndex)
+    res.status(200).json({data:property,currentPage:Number(page),numberofPage:Math.ceil(total/limit)})
+    }catch(err){
+    console.log(err)
+    res.status(400).json({message:"something went wrong",success:false,err:err.message})
+    }
+    }
+
+module.exports.searchProperty=async(req,res)=>{
     try{
     const keyword=req.query.keyword ? {
         name:{
