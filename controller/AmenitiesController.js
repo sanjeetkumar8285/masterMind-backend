@@ -1,11 +1,13 @@
 const amenitiesModel=require("../model/Schema/AmenitiesSchema")
-
+const fs=require('fs');
+const path=require('path')
 module.exports.addAmenities=async(req,res)=>{
 try{
 const {name,status}=req.body
 const amenities=new amenitiesModel({
     userId:req.user._id,
     name,
+    image:req.file ? req.file.filename: "",
     status
 })
 const data=await amenities.save();
@@ -52,8 +54,16 @@ module.exports.updateAmenities=async(req,res)=>{
         if(!amenities){
             return res.status(400).json({message:"Amenities with this id doesn't exist",success:false})
         }
+        if(req.file){
+            fs.unlink(path.join(__dirname,'../uploads/'+amenities.image),(err,file)=>{
+                if(err){
+                    console.log('unlink failed '+err)
+                }
+            })
+          }
         const data=await amenitiesModel.findByIdAndUpdate(id,{
             name,
+            image:req.file ? req.file.filename :amenities.image,
             status
         },{new:true})
         
@@ -68,6 +78,13 @@ module.exports.deleteAmenities=async(req,res)=>{
             const amenities=await amenitiesModel.findById(id)
             if(!amenities){
                 return res.status(400).json({message:"amenities with this id doesn't exist",success:false})
+            }
+            if(amenities.image){
+              fs.unlink(path.join(__dirname,'../uploads/'+amenities.image),(err,file)=>{
+                  if(err){
+                      console.log('unlink failed '+err)
+                  }
+              })
             }
             const data=await amenities.remove();
             res.status(200).json({message:"Amenities data deleted",success:true,data})

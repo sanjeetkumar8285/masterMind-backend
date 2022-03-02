@@ -21,9 +21,41 @@ propertyType:{
     type:String,
     required:true
 },
+seller:{
+    sellerId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"sellerDetail"
+},
+    sellerName:{
+    type:String,
+    required:true
+}
+},
+builder:{
+    builderId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"builderDetails"
+    },
+    builderName:{
+        type:String,
+        required:true
+    }
+},
 price:{
     type:String,
     required:true
+},
+bookingAmount:{
+    type:String,
+    required:true
+},
+saleType:{
+    type:String,
+    required:true
+},
+ownership:{
+type:String,
+required:true
 },
 about:{
     type:String,
@@ -70,6 +102,9 @@ description:{
     bedroom:{
         type:Number
     },
+    totalFloor:{
+        type:Number
+    }
 },
 address:{
     state:{

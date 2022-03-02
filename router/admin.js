@@ -8,7 +8,8 @@ const propertyStatusController=require("../controller/propertyStatusController")
 const amenitiesController=require("../controller/AmenitiesController");
 const adminController=require("../controller/adminAuthController")
 const blogController=require("../controller/blogController")
-
+const sellerController=require("../controller/sellerController");
+const builderController=require("../controller/builderController")
 //Property crud
 router.post("/property",auth,upload.fields([
     {
@@ -66,11 +67,10 @@ router.delete("/propertyStatus/:id",auth,propertyStatusController.deleteProperty
 router.get("/getPropertyStatus",auth,propertyStatusController.searchPropertyStatus)
 
 //amenities crud
-router.post("/amenities",auth,amenitiesController.addAmenities)
+router.post("/amenities",auth,upload.single("image"),amenitiesController.addAmenities)
 router.get("/amenities",auth,amenitiesController.getAmenities)
-router.put("/amenities/:id",auth,amenitiesController.updateAmenities)
+router.put("/amenities/:id",auth,upload.single("image"),amenitiesController.updateAmenities)
 router.delete("/amenities/:id",auth,amenitiesController.deleteAmenities)
-
 //search and get All Data route for Amenities
 router.get("/getAmenities",auth,amenitiesController.searchAmenities)
 
@@ -79,9 +79,23 @@ router.post("/blog",auth,upload.single("image"),blogController.addBlog)
 router.get("/blog",auth,blogController.getBlog)
 router.put("/blog/:id",auth,upload.single("image"),blogController.updateBlog)
 router.delete("/blog/:id",auth,blogController.deleteBlog)
-
 //search and get All Data route for Amenities
 router.get("/getBlog",auth,blogController.searchBlog)
+
+router.post("/seller",auth,sellerController.addSeller)
+router.get("/seller",auth,sellerController.getSeller)
+router.put("/seller/:id",auth,sellerController.updateSeller)
+router.delete("/seller/:id",auth,sellerController.deleteSeller)
+//search and get All Data route for Amenities
+router.get("/getSeller",auth,sellerController.searchSeller)
+
+router.post("/builder",auth,builderController.addBuilder)
+router.get("/builder",auth,builderController.getBuilder)
+router.put("/builder/:id",auth,builderController.updateBuilder)
+router.delete("/builder/:id",auth,builderController.deleteBuilder)
+//search and get All Data route for Amenities
+router.get("/getBuilder",auth,builderController.searchBuilder)
+
 
 router.post("/adminRegister",adminController.adminRegister)
 router.post("/adminLogin",adminController.adminLogin)

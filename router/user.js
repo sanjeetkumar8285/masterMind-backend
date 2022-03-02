@@ -64,4 +64,8 @@ res.status(200).json({message:'logged in user Data',success:true,data})
 })
 
 router.post("/sendMail",contactController.contact)
+
+//buildercontact
+router.post("/contactBuilder",contactController.contactBuilder)
+router.delete("/contactBuilder/:id",contactController.deleteContact)
 module.exports=router;

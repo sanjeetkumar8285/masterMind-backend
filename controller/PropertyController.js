@@ -1,5 +1,7 @@
 const propertyModel=require("../model/Schema/propertySchema");
-
+const sellerModel=require("../model/Schema/sellerSchema");
+const builderModel=require("../model/Schema/builderSchema");
+const amenitiesModel=require("../model/Schema/AmenitiesSchema");
 const path=require('path');
 const fs=require('fs');
 
@@ -11,8 +13,8 @@ const fileHandler=function(err,data){
 
 module.exports.addProperty=async(req,res)=>{
     try{
-const {name,propertyNo,propertyStatus,propertyType,price,about,sportsAndOutdoor,clubHouse,specifications,greenArea,fittingAndFurshing
-    ,amenities,areaSize,areaSizePrefix,landArea,landAreaPrefix,bedroom,
+const {name,propertyNo,propertyStatus,propertyType,sellerName,builderName,saleType,ownership,bookingAmount,price,about,sportsAndOutdoor,clubHouse,specifications,greenArea,fittingAndFurshing
+    ,amenities,areaSize,areaSizePrefix,landArea,landAreaPrefix,bedroom,totalFloor,
     addressDetails,state,longitude,latitude,status}=req.body
 
     let propertyImages=[]
@@ -23,12 +25,26 @@ const {name,propertyNo,propertyStatus,propertyType,price,about,sportsAndOutdoor,
     }else{
         propertyImages=[]
     }
+  const seller=await sellerModel.findOne({sellerName})
+  const builder=await builderModel.findOne({builderName})
+
 const property=new propertyModel({
     userId:req.user._id,
     name,
     propertyNo,
     propertyStatus,
     propertyType,
+    seller:{
+        sellerId:seller._id,
+        sellerName:sellerName
+    },
+    builder:{
+        builderId:builder._id,
+        builderName:builderName
+    },
+    saleType,
+    bookingAmount,
+    ownership,
     price,
     about,
     rating:{
@@ -44,7 +60,8 @@ const property=new propertyModel({
         areaSizePrefix,
         landArea,
         landAreaPrefix,
-        bedroom
+        bedroom,
+        totalFloor
     },
     address:{
         state,
@@ -87,7 +104,7 @@ module.exports.searchProperty=async(req,res)=>{
             $options:"i"
         }
     } : {}
-    const data=await propertyModel.find({...keyword}).sort({'createdAt':-1})
+    const data=await propertyModel.find({...keyword}).populate("seller.sellerId").populate("builder.builderId").sort({'createdAt':-1})
     res.status(200).json({message:"property retrived",success:true,data})
     }catch(err){
         res.status(400).json({message:"Something went wrong",success:false,err:err.message})
@@ -121,10 +138,13 @@ module.exports.deleteProperty=async(req,res)=>{
 
 module.exports.updateProperty=async(req,res)=>{
     try{
-        const {name,propertyStatus,propertyType,propertyNo,price,about,sportsAndOutdoor,clubHouse,specifications,greenArea,fittingAndFurshing
+        const {name,propertyStatus,propertyType,propertyNo,sellerName,builderName,saleType,ownership,bookingAmount,price,about,sportsAndOutdoor,clubHouse,specifications,greenArea,fittingAndFurshing
             ,amenities, areaSize,areaSizePrefix,landArea,landAreaPrefix,bedroom,
-            addressDetails,state,longitude,latitude,status}=req.body
+            addressDetails,state,longitude,latitude,totalFloor,status}=req.body
         const id=req.params.id
+        const seller=await sellerModel.findOne({sellerName})
+        const builder=await builderModel.findOne({builderName})
+
         const property=await propertyModel.findById(id)
         if(!property){
             return res.status(400).json({message:"property with this id doesn't exist",success:false,data})
@@ -152,19 +172,31 @@ module.exports.updateProperty=async(req,res)=>{
     propertyNo,
     propertyStatus,
     propertyType,
+    "seller.sellerId":seller._id,
+    "seller.sellerName":sellerName,
+      
+    "builder.builderId":builder._id,
+    "builder.builderName":builderName,
+
+    bookingAmount,
     price,
+    saleType,
+    ownership,
     about,
  "rating.sportsAndOutdoor":sportsAndOutdoor,
  "rating.clubHouse":clubHouse,
  "rating.specifications":specifications,
 "rating.greenArea":greenArea,
 "rating.fittingAndFurshing":fittingAndFurshing,
+
     amenities,
+
 "description.areaSize":areaSize,
 "description.areaSizePrefix":areaSizePrefix,
 "description.landArea":landArea,
 "description.landAreaPrefix":landAreaPrefix,
 "description.bedroom":bedroom,
+"description.totalFloor":totalFloor,
 
 "address.state":state,
 "address.addressDetails":addressDetails,
