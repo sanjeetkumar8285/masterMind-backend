@@ -83,9 +83,15 @@ rating:{
         required:true
     },
 },
-amenities:{
-    type:Array
+amenities:[
+    {
+name:{
+    type:String
 },
+image:{
+    type:String
+}
+}],
 description:{
     areaSize:{
         type:String

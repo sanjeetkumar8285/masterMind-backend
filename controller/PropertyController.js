@@ -28,6 +28,13 @@ const {name,propertyNo,propertyStatus,propertyType,sellerName,builderName,saleTy
   const seller=await sellerModel.findOne({sellerName})
   const builder=await builderModel.findOne({builderName})
 
+let arrayData=[]
+for(let i=0;i<amenities.length;i++){
+    const data=await amenitiesModel.findOne({name:amenities[i]})
+    arrayData.push({name:amenities[i],image:data.image})
+}
+
+
 const property=new propertyModel({
     userId:req.user._id,
     name,
@@ -54,7 +61,7 @@ const property=new propertyModel({
         greenArea,
         fittingAndFurshing
     },
-    amenities,
+    amenities:arrayData,
     description:{
         areaSize,
         areaSizePrefix,
@@ -104,7 +111,7 @@ module.exports.searchProperty=async(req,res)=>{
             $options:"i"
         }
     } : {}
-    const data=await propertyModel.find({...keyword}).populate("seller.sellerId").populate("builder.builderId").sort({'createdAt':-1})
+    const data=await propertyModel.find({...keyword}).populate("seller.sellerId").populate("builder.builderId").populate("amenities.amenitiesId").sort({'createdAt':-1})
     res.status(200).json({message:"property retrived",success:true,data})
     }catch(err){
         res.status(400).json({message:"Something went wrong",success:false,err:err.message})
@@ -145,6 +152,11 @@ module.exports.updateProperty=async(req,res)=>{
         const seller=await sellerModel.findOne({sellerName})
         const builder=await builderModel.findOne({builderName})
 
+        let arrayData=[]
+        for(let i=0;i<amenities.length;i++){
+            const data=await amenitiesModel.findOne({name:amenities[i]})
+            arrayData.push({name:amenities[i],image:data.image})
+        }
         const property=await propertyModel.findById(id)
         if(!property){
             return res.status(400).json({message:"property with this id doesn't exist",success:false,data})
@@ -189,7 +201,7 @@ module.exports.updateProperty=async(req,res)=>{
 "rating.greenArea":greenArea,
 "rating.fittingAndFurshing":fittingAndFurshing,
 
-    amenities,
+    amenities:arrayData,
 
 "description.areaSize":areaSize,
 "description.areaSizePrefix":areaSizePrefix,
