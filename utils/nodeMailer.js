@@ -1,5 +1,5 @@
 const nodeMailer=require("nodemailer");
-
+const path=require('path')
 const sendMail=async(options)=>{
 
     const transport=nodeMailer.createTransport({
@@ -22,6 +22,11 @@ const sendMail=async(options)=>{
             subject:options.subject,
             generateTextFromHTML: true,
             html:output,
+            attachments: [{
+                filename: "c-logo22.png",
+                path: path.join(__dirname,'../uploads/c-logo22.png'),
+
+            }]
         }
         await transport.sendMail(mailOption)
 }
