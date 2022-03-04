@@ -12,14 +12,13 @@ const sendMail=async(options)=>{
         }
         })
         const output = `
-        <h2>Client Name:- <b>${options.name}</b></h2>
-        <p>Email:- <b>${options.email}</b></p>
-        <p>Message:- ${options.message}</p>
+        <h2>Dear <b>${options.name}</b></h2>
+        <p> ${options.message}</p>
      
         `;
         const mailOption={
             from:`MasterMind Support Team <sanjeetkumar935421@gmail.com>`,
-            to:'sanjeetkumar935421@gmail.com',
+            to:options.email,
             subject:options.subject,
             generateTextFromHTML: true,
             html:output,

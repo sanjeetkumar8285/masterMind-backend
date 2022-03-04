@@ -4,7 +4,7 @@ const contactBuilderModel=require("../model/Schema/contactBuilder")
 module.exports.contact=async(req,res)=>{
 try{
 const {name,email,subject,message}=req.body
-await sendMail({
+sendMail({
 name,email,subject,message
 })
 res.status(200).json({message:`Email send to ${email} successfully`,success:true})
@@ -28,7 +28,34 @@ module.exports.contactBuilder=async(req,res)=>{
         res.status(400).json({message:"Something went wrong",success:false,err:err.message})
     }
 }
-
+module.exports.getContactBuilder=async(req,res)=>{
+    try{
+        const {page}=req.query
+        const limit=20;
+        const startIndex=(Number(page)-1)*limit
+        const total=await contactBuilderModel.countDocuments();
+        const contactBuilder=await contactBuilderModel.find().sort({_id:-1}).limit(limit).skip(startIndex)
+        res.status(200).json({data:contactBuilder,currentPage:Number(page),numberofPage:Math.ceil(total/limit)})
+    }catch(err){
+        res.status(400).json({message:"Something went wrong",success:false,err:err.message})
+    }
+    }
+    
+    module.exports.searchContactBuilder=async(req,res)=>{
+        try{
+        const keyword=req.query.keyword ? {
+            name:{
+                $regex:req.query.keyword,
+                $options:"i"
+            }
+        }:{}
+        const data=await contactBuilderModel.find({...keyword}).sort({"createdAt":-1})
+        res.status(200).json({message:"All Data Retrieved",success:true,data})
+        }catch(err){
+            res.status(400).json({message:"Something went wrong",success:false,err:err.message})
+        }
+        }
+        
 module.exports.deleteContact=async(req,res)=>{
     try{
         const id=req.params.id

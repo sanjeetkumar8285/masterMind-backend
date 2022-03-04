@@ -5,6 +5,7 @@ const userModel=require("../model/Schema/userSchema")
 const checkExistUser=require("../middleware/checkExistUser")
 const auth=require('../middleware/auth');
 const contactController=require("../controller/contactController")
+const loanController=require("../controller/loanController");
 router.post("/register",checkExistUser,async(req,res)=>{
     try{
         const {name,email,password,phone,userType,city,interestedIn,dealsIn,companyName}=req.body
@@ -65,7 +66,16 @@ res.status(200).json({message:'logged in user Data',success:true,data})
 
 router.post("/sendMail",contactController.contact)
 
+//loanRequest
+router.post("/loan",loanController.postLoan)
+router.delete("/loan/:id",loanController.deleteLoan)
+router.get("/loan",loanController.getLoan)
+router.get("/getLoan",loanController.searchLoan)
+
 //buildercontact
 router.post("/contactBuilder",contactController.contactBuilder)
+router.get("/contactBuilder",contactController.getContactBuilder)
+router.get("/getContactBuilder",contactController.searchContactBuilder)
 router.delete("/contactBuilder/:id",contactController.deleteContact)
+
 module.exports=router;

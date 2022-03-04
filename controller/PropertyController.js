@@ -14,7 +14,7 @@ const fileHandler=function(err,data){
 module.exports.addProperty=async(req,res)=>{
     try{
 const {name,propertyNo,propertyStatus,propertyType,sellerName,builderName,saleType,ownership,bookingAmount,price,about,sportsAndOutdoor,clubHouse,specifications,greenArea,fittingAndFurshing
-    ,amenities,areaSize,areaSizePrefix,landArea,landAreaPrefix,bedroom,totalFloor,
+    ,amenities,areaSize,areaSizePrefix,landArea,landAreaPrefix,bedroom,bathroom,totalFloor,
     addressDetails,state,longitude,latitude,status}=req.body
 
     let propertyImages=[]
@@ -68,6 +68,7 @@ const property=new propertyModel({
         landArea,
         landAreaPrefix,
         bedroom,
+        bathroom,
         totalFloor
     },
     address:{
@@ -146,7 +147,7 @@ module.exports.deleteProperty=async(req,res)=>{
 module.exports.updateProperty=async(req,res)=>{
     try{
         const {name,propertyStatus,propertyType,propertyNo,sellerName,builderName,saleType,ownership,bookingAmount,price,about,sportsAndOutdoor,clubHouse,specifications,greenArea,fittingAndFurshing
-            ,amenities, areaSize,areaSizePrefix,landArea,landAreaPrefix,bedroom,
+            ,amenities, areaSize,areaSizePrefix,landArea,landAreaPrefix,bedroom,bathroom,
             addressDetails,state,longitude,latitude,totalFloor,status}=req.body
         const id=req.params.id
         const seller=await sellerModel.findOne({sellerName})
@@ -208,6 +209,7 @@ module.exports.updateProperty=async(req,res)=>{
 "description.landArea":landArea,
 "description.landAreaPrefix":landAreaPrefix,
 "description.bedroom":bedroom,
+"description.bathroom":bathroom,
 "description.totalFloor":totalFloor,
 
 "address.state":state,

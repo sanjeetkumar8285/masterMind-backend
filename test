@@ -1,0 +1,50 @@
+//create table
+select query
+joins
+update
+in operator
+like
+betwwen
+aggregate function
+
+//to calculate third highest age from user table
+age
+10
+12
+30
+40
+50
+
+select max(age) from user where age <> (select max(age) from user where age <> (select max(age) from user))
+                                            40                                          50
+
+select age fron user group by age having count(age)>1;
+
+calculate age who are duplicate
+employee table
+id, name, dept, is_active
+1,a,php,0
+2,a,node,1
+3,b,php,0
+4,c,node,1
+5,c,ios,1
+6,d,node js,1
+
+ update from employee set dept="backend" where dept="php"
+ select * from employee where dept like "%node%"
+table 2 employee name,address
+employe mata
+id,emp_id,is_active,address
+1   1       0           chandigarh
+2   5       1           delhi
+3   4       1           pune
+4   6       0           hyderabad
+5   3       1           chandigarh
+
+select dept,count(dept) from employee where is_active=1 group by dept
+select dept,count(dept) from employee where is_active=1 group by dept
+
+select employee.name,employee.dept,employeeMata.address from employee inner join 
+employeeMata on employee.id=employeeMata.emp_id 
+
+p

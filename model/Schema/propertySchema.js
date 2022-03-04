@@ -83,8 +83,7 @@ rating:{
         required:true
     },
 },
-amenities:[
-    {
+amenities:[{
 name:{
     type:String
 },
@@ -106,6 +105,9 @@ description:{
         type:String
     },
     bedroom:{
+        type:Number
+    },
+    bathroom:{
         type:Number
     },
     totalFloor:{
